@@ -128,16 +128,74 @@ class Linearization(Scene):
         # points_text.align
         points_text.arrange(DOWN)
 
-        function_phi = Tex('\\phi(x_i)=a_1g_1(x_i)+a_2g_2(x_i)+\\dots+a_mg_m(x_i)\\approx y_i,\\quad i=1,\\dots,n', font_size=42)
+        function_phi = Tex('\\phi(x_i)=a_1g_1(x_i)+a_2g_2(x_i)+\\dots+a_mg_m(x_i)\\approx y_i,\\quad i=1,\\dots,n', **config_text)
         self.play(ShowCreation(points_text))
         self.wait()
         self.play(points_text.animate.shift(3*UP))
         self.wait()
 
         self.play(ShowCreation(function_phi))
+        self.wait()
         # self.play(functions_g.animate.shift(3*UP),ShowCreation(function_phi))
+        self.play(FadeOut(points_text))
+        self.play(function_phi.animate.shift(3 * UP))
+        self.wait()
 
+        function_F = Tex('F(a_1,\\dots,a_m)=\\sum_{i=1}^m\\left[y_i-\phi(x_i)\\right]^2', **config_text)
+        function_dF = Tex('\\frac{\\partial F}{\\partial a_k} = -2\\sum_{i=1}^m\\left[y_i-\\phi(x_i) \\right]g_k(x_i)', **config_text)
 
+        self.play(ShowCreation(function_F))
+        self.wait()
+
+        self.play(function_F.animate.shift(1.5*UP))
+        self.wait(0.5)
+        self.play(FadeIn(function_dF))
+        self.wait()
+
+        self.play(
+            # FadeOut(function_phi),
+            FadeOut(function_F),
+            function_dF.animate.shift(2*UP),
+        )
+        self.wait()
+
+        dF_zero_1 = Tex('\\frac{\\partial F}{\\partial a_k} = 0 \\Rightarrow', '\\sum_{i=1}^m', '\\left[y_i-\\phi(x_i) \\right]g_k(x_i)', '=','0', **config_text)
+        dF_zero_2 = Tex('\\frac{\\partial F}{\\partial a_k} = 0 \\Rightarrow', '\\sum_{i=1}^m', 'y_ig_k(x_i)', '=','\\sum_{i=1}^m \\phi(x_i)g_k(x_i)', **config_text)
+        dF_zero_3 = Tex('\\frac{\\partial F}{\\partial a_k} = 0 \\Rightarrow', '\\sum_{i=1}^m', 'y_ig_k(x_i)', '=','a_1\\sum_{i=1}^m g_1(x_i)g_k(x_i)+\\dots+a_m\\sum_{i=1}^m g_m(x_i)g_k(x_i)', **config_text)
+        dF_zero_4 = Tex('\\frac{\\partial F}{\\partial a_k} = 0 \\Rightarrow', ' b_k = a_1 s_{1 k} + \\dots + a_m s_{k m}',',\\quad b_k=\\sum_{i=1}^m y_ig_k(x_i),\\quad s_{k m}=\\sum_{i=1}^m g_m(x_i)g_k(x_i)', **config_text)
+        dF_zero_4.shift(0.6*RIGHT)
+        dF_zero_4.shift(2 * UP)
+
+        self.play(ShowCreation(dF_zero_1))
+        self.wait()
+        self.play(TransformMatchingTex(dF_zero_1, dF_zero_2))
+        self.wait()
+        self.play(TransformMatchingTex(dF_zero_2, dF_zero_3))
+        self.wait()
+
+        self.play(
+            FadeOut(function_phi),
+            FadeOut(function_dF),
+            dF_zero_3.animate.shift(3*UP)
+        )
+        self.wait()
+        self.play(ShowCreation(dF_zero_4))
+        # self.play()
+
+        b_1 = Tex('b_1 = a_1 s_{1 1} + \\dots + a_m s_{1 m}', **config_text)
+        b_1.shift(0.5*UP)
+        b_2 = Tex('b_2 = a_1 s_{1 2} + \\dots + a_m s_{2 m}', **config_text)
+        vdots = Tex('\\vdots', **config_text)
+        vdots.shift(0.5*DOWN)
+        b_k = Tex('b_k = a_1 s_{1 k} + \\dots + a_m s_{k m}', **config_text)
+        b_k.shift(DOWN)
+
+        self.play(TransformFromCopy(dF_zero_4[1], b_1))
+        self.wait(0.5)
+        self.play(TransformFromCopy(dF_zero_4[1], b_2),FadeIn(vdots))
+        self.wait(0.5)
+        self.play(TransformFromCopy(dF_zero_4[1], b_k))
+        
         self.wait(2)
         # self.embed()
 
@@ -145,7 +203,7 @@ class Linearization(Scene):
 if __name__ == "__main__":
     file = 'main.py'
     scene = 'Linearization'
-    render = True
+    render = not False
     if render:
         os.system(f'manimgl -w {file} {scene}')
     else:
