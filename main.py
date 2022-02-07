@@ -1,7 +1,4 @@
-from distutils.command.config import config
 import os
-from random import uniform, randint, choice
-from turtle import left
 import numpy as np
 from manimlib import *
 
@@ -131,14 +128,14 @@ class Linearization(Scene):
         points_text.arrange(DOWN)
 
         function_phi = Tex('\\phi(x_i)=a_1g_1(x_i)+a_2g_2(x_i)+\\dots+a_mg_m(x_i)\\approx y_i,\\quad i=1,\\dots,n', **config_text)
-        self.play(ShowCreation(points_text))
+        self.play(Write(points_text))
         self.wait(2)
         self.play(points_text.animate.shift(3*UP))
         self.wait(2)
 
-        self.play(ShowCreation(function_phi))
+        self.play(Write(function_phi))
         self.wait(2)
-        # self.play(functions_g.animate.shift(3*UP),ShowCreation(function_phi))
+        # self.play(functions_g.animate.shift(3*UP),Write(function_phi))
         self.play(FadeOut(points_text))
         self.play(function_phi.animate.shift(3 * UP))
         self.wait(2)
@@ -146,12 +143,12 @@ class Linearization(Scene):
         function_F = Tex('F(a_1,\\dots,a_m)=\\sum_{i=1}^m\\left[y_i-\phi(x_i)\\right]^2', **config_text)
         function_dF = Tex('\\frac{\\partial F}{\\partial a_k} = -2\\sum_{i=1}^m\\left[y_i-\\phi(x_i) \\right]g_k(x_i)', **config_text)
 
-        self.play(ShowCreation(function_F))
+        self.play(Write(function_F))
         self.wait(2)
 
         self.play(function_F.animate.shift(1.5*UP))
         self.wait(0.5)
-        self.play(FadeIn(function_dF))
+        self.play(Write(function_dF))
         self.wait(2)
 
         self.play(
@@ -168,7 +165,7 @@ class Linearization(Scene):
         dF_zero_4.shift(0.6*RIGHT)
         dF_zero_4.shift(2 * UP)
 
-        self.play(ShowCreation(dF_zero_1))
+        self.play(Write(dF_zero_1))
         self.wait(2)
         self.play(TransformMatchingTex(dF_zero_1, dF_zero_2))
         self.wait(2)
@@ -181,7 +178,7 @@ class Linearization(Scene):
             dF_zero_3.animate.shift(3*UP)
         )
         self.wait(2)
-        self.play(ShowCreation(dF_zero_4))
+        self.play(Write(dF_zero_4))
         self.wait(2)
 
         b_1 = Tex('b_1 = a_1 s_{1 1} + \\dots + a_m s_{1 m}', **config_text)
@@ -235,7 +232,7 @@ class Linearization(Scene):
         self.wait(2)
         self.play(sys.animate.shift(2.5*LEFT))
         self.wait(2)
-        self.play(FadeIn(sys_matrix))
+        self.play(Write(sys_matrix))
 
         self.wait(2)
         # self.embed()
@@ -244,7 +241,7 @@ class Linearization(Scene):
 if __name__ == "__main__":
     file = 'main.py'
     scene = 'Linearization'
-    render = True
+    render = False
     if render:
         os.system(f'manimgl -w {file} {scene}')
     else:
